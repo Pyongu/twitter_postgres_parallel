@@ -363,7 +363,6 @@ def _insert_tweets(connection,input_tweets):
     ######################################## 
     # STEP 2: perform the actual SQL inserts
     ######################################## 
-    # connection.commit()
     with connection.begin() as trans:
 
         # use the bulk_insert function to insert most of the data
@@ -405,7 +404,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--db',required=True)
     parser.add_argument('--inputs',nargs='+',required=True)
-    parser.add_argument('--batch_size',type=int,default=1000)
+    parser.add_argument('--batch_size',type=int,default=1)
     args = parser.parse_args()
 
     # create database connection
@@ -418,7 +417,6 @@ if __name__ == '__main__':
     # NOTE:
     # we reverse sort the filenames because this results in fewer updates to the users table,
     # which prevents excessive dead tuples and autovacuums
-    # connection.commit();
     with connection.begin() as trans:
         for filename in sorted(args.inputs, reverse=True):
             with zipfile.ZipFile(filename, 'r') as archive: 
